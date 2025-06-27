@@ -1,0 +1,18 @@
+
+:root {
+    --jellyplusVersion: "Jellyplus v1.0 (Demo)" !important;
+}
+
+.dashboardFooter::after {
+    content: var(--jellyplusVersion) !important;
+    font-size: .8em;
+    color: #4e4e60;
+}
+
+.wizardStartForm, .ui-corner-all, .ui-shadow {
+    background: transparent;
+}
+
+#indexPage:not(.hide) .card-withuserdata[data-isfolder="true"]:not([data-type="PhotoAlbum"],[data-type="Series"],[data-type="Folder"],[data-type="Season"],[data-type="Playlist"]) .cardText-first, #indexPage:not(.hide) .card-withuserdata[data-isfolder="true"]:not([data-type="PhotoAlbum"],[data-type="Series"],[data-type="Folder"],[data-type="Season"],[data-type="Playlist"]) .cardText.cardTextCentered {
+    display: block; !important;
+}

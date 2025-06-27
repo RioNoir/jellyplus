@@ -1,0 +1,24 @@
+version: '3'
+services:
+  jellyplus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: nscrio/jellyplus:latest
+    container_name: jellyplus
+    hostname: jellyplus
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - GUID=1000
+      - TZ=Europe/Rome
+      - APP_ENV=local           #Only for development
+      - APP_DEBUG=true          #Only for development
+    volumes:
+      - ./www:/var/www          #Only for development
+      - ./src:/var/src          #Only for development
+      - ./data:/data
+    ports:
+      - "8096:8096"
+      #devices:
+      #- /dev/dri:/dev/dri      #For Jellyfin Trasconding

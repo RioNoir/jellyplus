@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'Discover' => 'Scopri',
+    'All' => 'Tutti',
+    'Movie' => 'Film',
+    'Series' => 'Serie TV',
+    'Tv Series' => 'Serie TV',
+    'TV Series' => 'Serie TV',
+    'Live Tv' => 'Diretta TV',
+    'Live TV' => 'Diretta TV',
+    'New' => 'Novità',
+    'Featured' => 'In Primo Piano',
+    'Popular' => 'Popolari',
+    'Last Videos' => 'Ultimi video',
+    'Calendar Videos' => 'Video del calendario',
+    'Yesterday' => 'Ieri',
+    'Today' => 'Oggi',
+    'This Week' => 'Questa settimana',
+    'This Month' => 'Questo mese',
+    'This Year' => 'Quest\'anno',
+    'Last Year' => 'L\'anno scorso',
+    'Last Month' => 'Il mese scorso',
+    'Last Week' => 'La settimana scorsa',
+    'All Time' => 'Di sempre',
+];

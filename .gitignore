@@ -1,0 +1,12 @@
+/.idea
+/data
+/www/vendor
+/www/node_modules
+/www/.aspnet
+/www/Subtitle Edit
+/www/.env
+/www/storage/app
+/www/storage/framework/cache
+/www/storage/logs
+/src/jellyfin-web
+.env

@@ -1,0 +1,12 @@
+/vendor
+/.idea
+Homestead.json
+Homestead.yaml
+.aspnet
+.env
+.phpunit.result.cache
+core.log
+/Subtitle Edit
+/resources/python
+/config.json
+/bin

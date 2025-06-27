@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BrandingOptions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <LoginDisclaimer>Welcome to Jellyplus! This service is open source, we take no responsibility for the use of this software, all misuse is at the user's discretion.</LoginDisclaimer>
+  <CustomCss>@import url("https://cdn.jsdelivr.net/gh/lscambo13/ElegantFin@main/Theme/ElegantFin-jellyfin-theme-build-latest-minified.css");</CustomCss>
+  <SplashscreenEnabled>true</SplashscreenEnabled>
+</BrandingOptions>
