@@ -16,7 +16,7 @@
                         <button is="emby-button" id="update-item" type="button" class="raised button-submit block" style="background-color: darkgreen;"><span>Update Item</span></button>
                     </div>
                     <div style="margin-top: 5px">
-                        <button is="emby-button" id="delete-item" type="button" class="raised button-submit block" style="background-color: darkred;"><span>Delete Item</span></button>
+                        <button is="emby-button" id="delete-item" type="button" class="raised button-submit block" style="background-color: darkred !important; border: solid #4d0303 .075em !important;"><span>Delete Item</span></button>
                     </div>
                 </fieldset>
 
