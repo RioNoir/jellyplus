@@ -14,5 +14,5 @@
 }
 
 #indexPage:not(.hide) .card-withuserdata[data-isfolder="true"]:not([data-type="PhotoAlbum"],[data-type="Series"],[data-type="Folder"],[data-type="Season"],[data-type="Playlist"]) .cardText-first, #indexPage:not(.hide) .card-withuserdata[data-isfolder="true"]:not([data-type="PhotoAlbum"],[data-type="Series"],[data-type="Folder"],[data-type="Season"],[data-type="Playlist"]) .cardText.cardTextCentered {
-    display: block; !important;
+    display: block !important;
 }
