@@ -30,7 +30,7 @@ echo "***********************************************************"
 echo " Starting Jellyplus Docker Container                   "
 echo "***********************************************************"
 
-#Pulisco le directory che devo ricreare
+#Directories customizations
 rm -rf $JP_DATA_PATH/app/sessions
 rm -rf $JP_DATA_PATH/app/cache
 rm -rf $JP_DATA_PATH/app/response
@@ -39,7 +39,6 @@ rm -rf $JP_DATA_PATH/nginx/logs
 rm -rf $JP_DATA_PATH/jellyfin/log
 rm -rf $JP_DATA_PATH/jellyfin/cache
 
-#Creo le directory che mi servono
 info "-- Creating the necessary folders if they do not already exist"
 mkdir -p $JP_DATA_PATH/app/sessions
 mkdir -p $JP_DATA_PATH/app/cache
@@ -51,7 +50,7 @@ mkdir -p $JP_DATA_PATH/jellyfin/config
 mkdir -p $JP_DATA_PATH/nginx/logs
 mkdir -p $JP_DATA_PATH/library
 
-#Configurazione Laravel
+#Laravel customizations
 info "-- Configuring the basic dependencies of the app"
 if [ ! -f $JP_DATA_PATH/app/database.sqlite ]; then
   cp /var/www/database/database.sqlite $JP_DATA_PATH/app/database.sqlite
@@ -60,24 +59,46 @@ composer install --no-interaction --prefer-dist --optimize-autoloader 2> /dev/nu
 php artisan migrate 2>&1 > /dev/null
 php artisan queue:clear 2>&1 > /dev/null
 
-#Customizzazioni Jellyfin
+#Jellyfin customizations
 info "-- Performing customizations to Jellyfin"
 if [ -d /usr/share/jellyfin/web ]; then
   cp -r /var/src/img/* /usr/share/jellyfin/web/assets/img
   cp -r /var/src/img/web-icons/* /usr/share/jellyfin/web/
-  echo "$(cat /var/src/themes/theme.css)" >> /usr/share/jellyfin/web/themes/dark/theme.css
-  echo "$(cat /var/src/themes/theme.css)" >> /usr/share/jellyfin/web/themes/light/theme.css
+
+  #Theme customizations
+  CUSTOM_THEME="\n\n $(cat /var/src/themes/theme.css)"
+  THEME="$(cat /usr/share/jellyfin/web/themes/dark/theme.css)"
+  if [ -n "$THEME" ]; then
+    START="/*JELLYPLUS*/"
+    END="/*ENDJELLYPLUS*/"
+    START=${THEME#*"$START"}
+    END=${START%"$END"*}
+    TOREMOVE="${END##*( )}"
+    if [[ "$TOREMOVE" != "$THEME" ]]; then
+        THEME="$(replace_text "$THEME" "$(echo "$TOREMOVE")" "$(echo "$CUSTOM_THEME")")"
+    else
+      ADD_THEME="\n\n/*JELLYPLUS*/ $(echo "$CUSTOM_THEME") \n\n/*ENDJELLYPLUS*/"
+      THEME="$THEME $(echo "$ADD_THEME")"
+    fi
+  fi
+  echo "$THEME" > /usr/share/jellyfin/web/themes/dark/theme.css
+  echo "$THEME" > /usr/share/jellyfin/web/themes/light/theme.css
+  echo "$THEME" > /usr/share/jellyfin/web/themes/appletv/theme.css
+  echo "$THEME" > /usr/share/jellyfin/web/themes/blueradiance/theme.css
+  echo "$THEME" > /usr/share/jellyfin/web/themes/purplehaze/theme.css
+  echo "$THEME" > /usr/share/jellyfin/web/themes/wmc/theme.css
+
   cp /var/src/jellyfin/config/network.xml $JP_DATA_PATH/jellyfin/config/network.xml
   if [ ! -f $JP_DATA_PATH/jellyfin/config/branding.xml ]; then
     cp /var/src/jellyfin/config/branding.xml $JP_DATA_PATH/jellyfin/config/branding.xml
   fi
 fi
 
-#Configurazione MediaFlowProxy
+#MediaFlowProxy configuration
 API_PASSWORD=$(head /dev/urandom | tr -dc A-Za-z0-9 | head -c 32)
 export API_PASSWORD="$API_PASSWORD"
 
-#Cambio i permessi nelle cartelle data
+#Folder permissions
 info "-- Changing permissions to folders and files"
 chown -R $USER_NAME:$GROUP_NAME $JP_DATA_PATH
 
