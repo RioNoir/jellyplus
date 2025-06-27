@@ -76,7 +76,7 @@
 
         document.querySelector('.configForm')
             .addEventListener('submit', function (e) {
-                let PluginId = "sp-download";
+                let PluginId = "jellyplus-download";
 
                 Dashboard.showLoadingMsg();
                 ApiClient.getPluginConfiguration(PluginId).then(function (config) {

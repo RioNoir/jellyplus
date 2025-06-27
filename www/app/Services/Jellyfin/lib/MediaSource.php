@@ -37,8 +37,8 @@ class MediaSource
           "TranscodingUrl" => null,
           "TranscodingSubProtocol" => "http",
           "TranscodingContainer" => null,
-          "DefaultAudioStreamIndex" => 0,
-          "DefaultSubtitleStreamIndex" => -1,
+          //"DefaultAudioStreamIndex" => 0,
+          //"DefaultSubtitleStreamIndex" => -1,
           "HasSegments" => false,
     ];
 }

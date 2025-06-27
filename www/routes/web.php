@@ -22,12 +22,12 @@ $router->get('/web/configurationpages',                         ['as'=> 'jellyfi
 $router->get('/web/ConfigurationPages',                         ['as'=> 'jellyfin.configpages', 'uses'=>'JellyfinController@getConfigurationPages']);
 $router->get('/web/configurationpage',                          ['as'=> 'jellyfin.configpage', 'uses'=>'JellyfinController@getConfigurationPage']);
 
-$router->get('/Plugins/jellyplus/Configuration',                ['as'=> 'jellyplus.config.get', 'uses'=>'JellyfinController@getSPConfiguration']);
-$router->post('/Plugins/jellyplus/Configuration',               ['as'=> 'jellyplus.config.update', 'uses'=>'JellyfinController@postSPConfiguration']);
-$router->get('/Plugins/jellyplus-item/Configuration',           ['as'=> 'jellyplus.item.get', 'uses'=>'JellyfinController@getSPItem']);
-$router->post('/Plugins/jellyplus-item/Configuration',          ['as'=> 'jellyplus.item.update', 'uses'=>'JellyfinController@postSPItem']);
-$router->get('/Plugins/jellyplus-download/Configuration',       ['as'=> 'jellyplus.download.get', 'uses'=>'JellyfinController@getSPDownload']);
-$router->post('/Plugins/jellyplus-download/Configuration',      ['as'=> 'jellyplus.download.post', 'uses'=>'JellyfinController@postSPDownload']);
+$router->get('/Plugins/jellyplus/Configuration',                ['as'=> 'jellyplus.config.get', 'uses'=>'JellyfinController@getJellyplusConfiguration']);
+$router->post('/Plugins/jellyplus/Configuration',               ['as'=> 'jellyplus.config.update', 'uses'=>'JellyfinController@postJellyplusConfiguration']);
+$router->get('/Plugins/jellyplus-item/Configuration',           ['as'=> 'jellyplus.item.get', 'uses'=>'JellyfinController@getJellyplusItem']);
+$router->post('/Plugins/jellyplus-item/Configuration',          ['as'=> 'jellyplus.item.update', 'uses'=>'JellyfinController@postJellyplusItem']);
+$router->get('/Plugins/jellyplus-download/Configuration',       ['as'=> 'jellyplus.download.get', 'uses'=>'JellyfinController@getJellyplusDownload']);
+$router->post('/Plugins/jellyplus-download/Configuration',      ['as'=> 'jellyplus.download.post', 'uses'=>'JellyfinController@postJellyplusDownload']);
 
 $router->get('/System/Info',                                    ['as'=> 'jellyfin.system.info', 'uses'=>'JellyfinController@getSystemInfoPublic']);
 $router->get('/System/Info/Public',                             ['as'=> 'jellyfin.system.info.public', 'uses'=>'JellyfinController@getSystemInfoPublic']);

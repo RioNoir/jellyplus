@@ -12,11 +12,9 @@
 
                 <fieldset class="verticalSection">
                     <legend><h3>Actions</h3></legend>
-                    @if($item->item_type == "tvSeries")
-                        <div style="margin-top: 5px">
-                            <button is="emby-button" id="update-item" type="button" class="raised button-submit block" style="background-color: darkgreen;"><span>Update Item</span></button>
-                        </div>
-                    @endif
+                    <div style="margin-top: 5px; @if($item->item_type == "tvSeries") display:block; @else display:none; @endif">
+                        <button is="emby-button" id="update-item" type="button" class="raised button-submit block" style="background-color: darkgreen;"><span>Update Item</span></button>
+                    </div>
                     <div style="margin-top: 5px">
                         <button is="emby-button" id="delete-item" type="button" class="raised button-submit block" style="background-color: darkred;"><span>Delete Item</span></button>
                     </div>
@@ -121,7 +119,7 @@
 
         document.querySelector('.configForm')
             .addEventListener('submit', function (e) {
-                let PluginId = "sp-item";
+                let PluginId = "jellyplus-item";
 
                 Dashboard.showLoadingMsg();
                 ApiClient.getPluginConfiguration(PluginId).then(function (config) {

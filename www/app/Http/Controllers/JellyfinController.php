@@ -193,22 +193,22 @@ class JellyfinController extends Controller
             if(isset($item)) {
                 if(in_array($item['Type'], ['Movie', 'Series'])){
                     $metadata['ExternalIdInfos'][] = [
-                        'Name' => 'SP',
-                        'Key' => 'SP',
+                        'Name' => 'Jellyplus',
+                        'Key' => 'JP',
                         'UrlFormatString' => app_url('/web/#/configurationpage?name=JP_ITEM&itemId={0}'),
                     ];
                 }
                 if(in_array($item['Type'], ['Movie', 'Episode'])){
                     $metadata['ExternalIdInfos'][] = [
-                        'Name' => 'SP Stream',
-                        'Key' => 'SPStream',
+                        'Name' => 'Jellyplus Stream',
+                        'Key' => 'JPStream',
                         'UrlFormatString' => '',
                     ];
                 }
                 if(in_array($item['Type'], ['Movie', 'Series', 'Season', 'Episode'])){
                     $metadata['ExternalIdInfos'][] = [
-                        'Name' => 'SP Stream (Direct Url)',
-                        'Key' => 'SPStreamUrl',
+                        'Name' => 'Jellyplus Stream (Direct Url)',
+                        'Key' => 'JPStreamUrl',
                         'UrlFormatString' => '{0}',
                     ];
                 }
@@ -411,7 +411,7 @@ class JellyfinController extends Controller
 //            'url' => '#/list.html?parentId='.md5('_discover').'&serverId='.jp_config('server_id'),
 //        ];
         $response['menuLinks'][] = [
-            'name' => 'SP Config',
+            'name' => 'Jellyplus',
             'icon' => 'settings',
             'url' => '#/configurationpage?name=JP_CONF',
         ];
@@ -481,7 +481,7 @@ class JellyfinController extends Controller
     public function getSystemLog(Request $request) {
         $log = $request->get('name');
         $apiKey = $request->get('api_key');
-        if(isset($log) && str_starts_with($log, 'sp')){
+        if(isset($log) && str_starts_with($log, 'jellyplus')){
             $api = new JellyfinApiManager();
             if($api->testApiKey($apiKey)) {
                 $filepath = jp_data_path('app/logs/' . $log);
@@ -617,11 +617,11 @@ class JellyfinController extends Controller
         return $this->response->setBody([])->setStatus(404)->getResponse();
     }
 
-    public function getSPConfiguration(Request $request){
+    public function getJellyplusConfiguration(Request $request){
         return $this->response->setBody(jp_config())->setStatus(200)->getResponse();
     }
 
-    public function postSPConfiguration(Request $request){
+    public function postJellyplusConfiguration(Request $request){
         $api = new JellyfinApiManager();
         $user = $api->getAuthUser();
         if(!empty($user) && (bool) @$user['Policy']['IsAdministrator']){
@@ -635,11 +635,11 @@ class JellyfinController extends Controller
         return $this->response->setBody(jp_config())->setStatus(200)->getResponse();
     }
 
-    public function getSPItem(Request $request){
+    public function getJellyplusItem(Request $request){
         return $this->response->setBody([])->setStatus(200)->getResponse();
     }
 
-    public function postSPItem(Request $request){
+    public function postJellyplusItem(Request $request){
         $api = new JellyfinApiManager();
         $user = $api->getAuthUser();
         if(!empty($user) && (bool) @$user['Policy']['IsAdministrator']){
@@ -659,11 +659,11 @@ class JellyfinController extends Controller
         return $this->response->setBody([])->setStatus(404)->getResponse();
     }
 
-    public function getSPDownload(Request $request){
+    public function getJellyplusDownload(Request $request){
         return $this->response->setBody([])->setStatus(200)->getResponse();
     }
 
-    public function postSPDownload(Request $request){
+    public function postJellyplusDownload(Request $request){
         $api = new JellyfinApiManager();
         $user = $api->getAuthUser();
         if(!empty($user) && (bool) @$user['Policy']['IsAdministrator']){

@@ -121,8 +121,8 @@ class JellyfinItem
         $tmdbId = @$this->item['ProviderIds']['Tmdb'];
         $kitsuId = @$this->item['ProviderIds']['Kitsu'];
 
-        $spStreamId = @$this->item['ProviderIds']['SPStream'];
-        $spStreamUrl = @$this->item['ProviderIds']['SPStreamUrl'];
+        $JPStreamId = @$this->item['ProviderIds']['JPStream'];
+        $JPStreamUrl = @$this->item['ProviderIds']['JPStreamUrl'];
 
         if (isset($this->item['SeriesId']) && isset($this->item['SeasonId']) && isset($this->item['IndexNumber'])) {
             $imdbId = null;
@@ -134,8 +134,8 @@ class JellyfinItem
             $seasonNumber = $this->getSeasonNumber();
 
             $season = $this->getParentSeason();
-            if(empty($spStreamUrl) && !empty(@$season['ProviderIds']['SPStreamUrl']))
-                $spStreamUrl = parse_stream_url($season['ProviderIds']['SPStreamUrl'], $seasonNumber, $episodeNumber, $defaultEpisodeNumber);
+            if(empty($JPStreamUrl) && !empty(@$season['ProviderIds']['JPStreamUrl']))
+                $JPStreamUrl = parse_stream_url($season['ProviderIds']['JPStreamUrl'], $seasonNumber, $episodeNumber, $defaultEpisodeNumber);
 
             $series = $this->getParentSeries();
             if (!empty($series) && isset($seasonNumber) && isset($episodeNumber)) {
@@ -148,15 +148,15 @@ class JellyfinItem
                 if(!empty(@$series['ProviderIds']['Kitsu']))
                     $kitsuId = @$series['ProviderIds']['Kitsu'] . ':' . $seasonNumber . ':' . $episodeNumber;
 
-                if(empty($spStreamUrl) && !empty(@$series['ProviderIds']['SPStreamUrl'])){
-                    $spStreamUrl = parse_stream_url($series['ProviderIds']['SPStreamUrl'], $seasonNumber, $episodeNumber, $defaultEpisodeNumber);
+                if(empty($JPStreamUrl) && !empty(@$series['ProviderIds']['JPStreamUrl'])){
+                    $JPStreamUrl = parse_stream_url($series['ProviderIds']['JPStreamUrl'], $seasonNumber, $episodeNumber, $defaultEpisodeNumber);
                 }
             }
         }
 
         if(isset($this->localItem)) {
             if($this->isMovie() || $this->isSeries()) {
-                $this->item['ProviderIds']['SP'] = @$this->localItem->item_md5;
+                $this->item['ProviderIds']['JP'] = @$this->localItem->item_md5;
                 $this->item['ExternalUrls'][] = [
                     'Name' => 'Jellyplus',
                     'Url' => app_url('/web/#/configurationpage?name=JP_ITEM&itemId=' . @$this->localItem->item_md5.'&action=edit')
@@ -180,14 +180,14 @@ class JellyfinItem
         $this->item['MetaIds']['kitsuId'] = $kitsuId;
 
         if($this->isMovie() || $this->isEpisode()) {
-            if (!empty($spStreamId)) {
-                $this->item['MetaIds']['metaId'] = $spStreamId;
-                $this->item['MetaIds']['imdbId'] = $spStreamId;
+            if (!empty($JPStreamId)) {
+                $this->item['MetaIds']['metaId'] = $JPStreamId;
+                $this->item['MetaIds']['imdbId'] = $JPStreamId;
             }else{
-                $this->item['ProviderIds']['SPStream'] = $this->item['MetaIds']['metaId'];
+                $this->item['ProviderIds']['JPStream'] = $this->item['MetaIds']['metaId'];
             }
-            if (!empty($spStreamUrl))
-                $this->item['MetaIds']['metaUrl'] = $spStreamUrl;
+            if (!empty($JPStreamUrl))
+                $this->item['MetaIds']['metaUrl'] = $JPStreamUrl;
         }
 
         return $this->item['MetaIds'];
@@ -235,7 +235,7 @@ class JellyfinItem
                 $sourceQuery['metaType'] = @$this->localItem->item_type;
 
             if(isset($sourceQuery['url']))
-                $this->item['ProviderIds']['SPStreamUrl'] = $sourceQuery['url'];
+                $this->item['ProviderIds']['JPStreamUrl'] = $sourceQuery['url'];
 
             $sourceQuery['apiKey'] = jp_config('api_key');
             $sourceUrl = app_url($source).'?'.http_build_query($sourceQuery);
@@ -244,7 +244,7 @@ class JellyfinItem
             $this->item['StrmUrl'] = $sourceUrl;
             if($this->isMovie() || $this->isEpisode()) {
                 $this->item['ExternalUrls'][] = [
-                    'Name' => 'SP Stream URL',
+                    'Name' => 'Jellyplus Stream URL',
                     'Url' => $sourceUrl
                 ];
             }
