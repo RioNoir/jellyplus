@@ -56,12 +56,16 @@ More information can be found on the official Jellyfin documentation [here](http
 By default, Jellyfin allows you to manually add media content to the library for convenient viewing. Unfortunately, this system can be limiting in some cases, which is why we have added features that can come in handy:
 
 - **Online search for media content** (currently only video, such as Movies and TV Series), using the TMDB API and the catalogs in the Addons. This allows you to automatically create the folders and subfolders needed for Jellyfin to be able to play content: NB: this does not in any way allow you to view in content if you do not have it, it is just an automation for folder structure.
+
 - **Automatic content update** (currently only video, such as Movies and TV Series). Using the TMDB API and Addons catalogs, Jellyplus can update the folder structure in case of new releases such as the release of new seasons or episodes of TV series.
+
 - **Playback via external url**, already supported by default by Jellyfin via .strm files, but here it has been made significantly easier to handle. It is possible to enter the link to be played directly in the metadata in the “Jellyplus Stream (Direct Url)” field, by doing this Jellyplus will know that it should automatically start the content from that url. This url supports dynamic parameters.
+
 - **Addons**, are very similar to classic Jellyfin Plugins, but unlike the latter they are not used to extend functions to Jellyfin but to insert well-structured multimedia content predefined by Jellyplus. For example, it is possible to import a “Catalog” Addon to view content directly in Jellyfin that can be added to the library, or it is possible to signal to Jellyfin for that content which source it can be played from.
+
 - **Discover**, that is a function that is shown from the moment there are Addons with catalogs, it allows you to explore these catalogs and find content that can be added to the library.
 
-View full Documentation [here](https://github.com/NsCRio/jellyplus/blob/main/docs/DOCUMENTATION.md).
+View FULL DOCUMENTATION [HERE](https://github.com/NsCRio/jellyplus/blob/main/docs/DOCUMENTATION.md).
 
 ## Supported Clients
 
