@@ -61,7 +61,7 @@ By default, Jellyfin allows you to manually add media content to the library for
 - **Addons**, are very similar to classic Jellyfin Plugins, but unlike the latter they are not used to extend functions to Jellyfin but to insert well-structured multimedia content predefined by Jellyplus. For example, it is possible to import a “Catalog” Addon to view content directly in Jellyfin that can be added to the library, or it is possible to signal to Jellyfin for that content which source it can be played from.
 - **Discover**, that is a function that is shown from the moment there are Addons with catalogs, it allows you to explore these catalogs and find content that can be added to the library.
 
-View full guides here.
+View full Documentation [here](https://github.com/NsCRio/jellyplus/blob/main/docs/DOCUMENTATION.md).
 
 ## Supported Clients
 
