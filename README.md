@@ -1,3 +1,5 @@
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/rionoir)
+
 ![jellyplus](https://raw.githubusercontent.com/NsCRio/jellyplus/refs/heads/main/src/img/banner-light.png)
 # Jellyplus (Beta)
 ### Enhanced Jellyfin Media center
