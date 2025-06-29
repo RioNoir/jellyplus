@@ -41,7 +41,6 @@ Global Search leverages the API and Addons to show you the content you are looki
 
 ![jellyplus](https://raw.githubusercontent.com/NsCRio/jellyplus/refs/heads/main/docs/images/7.png)
 ![jellyplus](https://raw.githubusercontent.com/NsCRio/jellyplus/refs/heads/main/docs/images/8.png)
-![jellyplus](https://raw.githubusercontent.com/NsCRio/jellyplus/refs/heads/main/docs/images/9.png)
 
 ## Direct Url
 
