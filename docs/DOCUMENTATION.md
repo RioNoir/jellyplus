@@ -70,8 +70,9 @@ It will return such a link depending on the season and episode:
 *https://personal-storage.jellyplus/mr-robot/season-01/episode-004.mp4*
 
 Direct Urls are configurable at the Movie, TV Series, TV Series Season, and individual TV Series Episode level. When configured at the TV Series and/or Season level, if configured via parameters, all episodes will inherit the correct links.
-
 Direct Urls take precedence over Addons from the moment you choose to play a content in "automatic" mode.
+
+DISCLAIMER: The source from where to reproduce the content must be legitimate and you must have the rights to stream it.
 
 ## Addons
 
