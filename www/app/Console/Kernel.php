@@ -51,6 +51,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command(ClearCacheCommand::class)->everyTwoHours();
+
         if(!empty(jp_config('tasks.cron.'.md5('library:clean'))))
             $schedule->command(CleanLibraryCommand::class)->cron(jp_config('tasks.cron.'.md5('library:clean')));
         if(!empty(jp_config('tasks.cron.'.md5('library:update'))))
