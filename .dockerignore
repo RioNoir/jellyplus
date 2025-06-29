@@ -2,6 +2,7 @@
 .idea
 .git
 data
+docs
 www/vendor
 www/bin
 www/node_modules
