@@ -501,7 +501,7 @@ class JellyfinItem
 
     public function getSeasonNumber(){
         $seasonNumber = @$this->item['ParentIndexNumber'];
-        if(!isset($seasonNumber)){
+        if((int) $seasonNumber <= 0){
             $api = new JellyfinApiManager();
             $seasons = $api->getSeasons($this->item['SeriesId']);
             if(!empty(@$seasons['Items'])){
@@ -515,12 +515,14 @@ class JellyfinItem
 
     public function getEpisodeNumber(){
         $episodeNumber = @$this->item['IndexNumber'];
-        $api = new JellyfinApiManager();
-        $episodes = $api->getEpisodes($this->item['SeriesId'], ['seasonId' => $this->item['ParentId']]);
-        if(!empty(@$episodes['Items'])){
-            $episodeNumber = array_key_first(array_filter($episodes['Items'], function($item){
-                    return $item['Id'] == @$this->item['Id'];
-                })) + 1;
+        if((int) $episodeNumber <= 0){
+            $api = new JellyfinApiManager();
+            $episodes = $api->getEpisodes($this->item['SeriesId'], ['seasonId' => $this->item['ParentId']]);
+            if(!empty(@$episodes['Items'])){
+                $episodeNumber = array_key_first(array_filter($episodes['Items'], function($item){
+                        return $item['Id'] == @$this->item['Id'];
+                    })) + 1;
+            }
         }
         return $episodeNumber;
     }
