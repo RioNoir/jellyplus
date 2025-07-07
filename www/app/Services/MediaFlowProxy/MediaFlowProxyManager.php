@@ -93,7 +93,7 @@ class MediaFlowProxyManager
     }
 
     protected function getEndpoint(){
-        return '/proxy/hls/manifest.m3u8';
+        return '/proxy/stream';
 //        if(!empty($this->file) && str_ends_with($this->file, '.m3u8')){
 //            return '/proxy/hls/manifest.m3u8';
 //        }

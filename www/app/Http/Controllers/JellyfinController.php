@@ -129,6 +129,9 @@ class JellyfinController extends Controller
     }
 
     public function postItemsPlaybackInfo(string $itemId, Request $request) {
+        set_time_limit(400);
+        ini_set("memory_limit",-1);
+
         $data = $request->post();
 
         JellyfinItem::findById($itemId, $request->query())->getResponse();
@@ -146,7 +149,7 @@ class JellyfinController extends Controller
         }
 
         $api = new JellyfinApiManager();
-        $response = $api->setTimeout(120)->postItemPlaybackInfo($itemId, $request->query(), $data);
+        $response = $api->setTimeout(300)->postItemPlaybackInfo($itemId, $request->query(), $data);
 
         return $this->response->setBody($response)->setStatus(200)->getResponse();
     }
@@ -238,7 +241,7 @@ class JellyfinController extends Controller
                     'StartIndex' => 0,
                     'Limit' => 50
                 ]);
-                if(empty(@$data['Items']))
+                if(empty(@$data['Items']) && @$item['CollectionType'] !== "livetv")
                     unset($items[$key]);
             }
 
