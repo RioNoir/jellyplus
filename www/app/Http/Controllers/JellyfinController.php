@@ -104,11 +104,11 @@ class JellyfinController extends Controller
 //                $image = ImageHelper::getImageById($itemId, $height, $width);
 //            }
 
-            if($itemId == md5('_discover')) {
+            if($itemId == md5('_discover'))
                 $image = ImageHelper::getImageByName(t("Discover"), 225, 400);
-//                if(!isset($image))
-//                    $image = resource_path('images/discover.png');
-            }
+
+            if($itemId == md5('_livetv'))
+                $image = ImageHelper::getImageByName(t("Live TV"), 225, 400);
 
             $item = Items::where('item_md5', $itemId)->first();
             if(isset($item->item_image_url))
@@ -241,6 +241,13 @@ class JellyfinController extends Controller
                     'StartIndex' => 0,
                     'Limit' => 50
                 ]);
+
+                if(@$item['CollectionType'] == "livetv"){
+                    if(empty(@$item['ImageTags'])){
+                        $item['ImageTags']['Primary'] = md5('_livetv');
+                    }
+                }
+
                 if(empty(@$data['Items']) && @$item['CollectionType'] !== "livetv")
                     unset($items[$key]);
             }
