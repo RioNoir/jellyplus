@@ -49,7 +49,7 @@ class UpdateLibraryCommand extends Command
                 $titleData = $item->getTitleData();
                 if (!isset($titleData['enddate']) && !in_array(strtolower($titleData['status']), ['ended', 'finished'])) { //Solo se non è conclusa
                     $item->updateItemToLibrary();
-                    if ($api->testApiKey()) {
+                    if ($api->testApiKey() && isset($item->item_jellyfin_id)) {
                         $api->refreshItemMetadata($item->item_jellyfin_id, [
                             'Recursive' => 'true',
                             'ImageRefreshMode' => 'FullRefresh',
@@ -61,6 +61,8 @@ class UpdateLibraryCommand extends Command
                     }
                     sleep(3);
                 }
+                $item->updated_at = Carbon::now();
+                $item->save();
             }
             Log::info('[' . $this->getName() . '] ' . $count . ' tv series updated.');
             $this->info('[' . $this->getName() . '] ' . $count . ' tv series updated.');
