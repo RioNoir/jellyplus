@@ -39,6 +39,8 @@ class UpdateLibraryCommand extends Command
             Log::info('[' . $this->getName() . '] cache cleared.');
             $this->info('[' . $this->getName() . '] cache cleared.');
 
+            $api = new JellyfinApiManager();
+
             //Faccio l'aggiornamento delle serie tv per vedere se ci sono nuovi episodi
             $items = Items::query()->where('item_type', 'tvSeries')->whereNotNull('item_jellyfin_id')->whereNotNull('item_path')
                 ->where('updated_at', '<=', Carbon::now()->subHours(jp_config('jellyfin.update_series_after')))->get();
@@ -47,13 +49,22 @@ class UpdateLibraryCommand extends Command
                 $titleData = $item->getTitleData();
                 if (!isset($titleData['enddate']) && !in_array(strtolower($titleData['status']), ['ended', 'finished'])) { //Solo se non è conclusa
                     $item->updateItemToLibrary();
+                    if ($api->testApiKey()) {
+                        $api->refreshItemMetadata($item->item_jellyfin_id, [
+                            'Recursive' => 'true',
+                            'ImageRefreshMode' => 'FullRefresh',
+                            'MetadataRefreshMode' => 'FullRefresh',
+                            'ReplaceAllImages' => 'false',
+                            'RegenerateTrickplay' => 'false',
+                            'ReplaceAllMetadata' => 'false'
+                        ]);
+                    }
                     sleep(3);
                 }
             }
             Log::info('[' . $this->getName() . '] ' . $count . ' tv series updated.');
             $this->info('[' . $this->getName() . '] ' . $count . ' tv series updated.');
 
-            $api = new JellyfinApiManager();
             //Controllo se funziona ancora l'api key
             if ($api->testApiKey()) {
                 $api->setAuthenticationByApiKey();

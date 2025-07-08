@@ -159,15 +159,16 @@ class JellyfinApiManager extends ApiManager
         return $this->apiCall('/Users/'.$userId.'/Items', 'GET', $query);
     }
 
-    public function refreshItemMetadata(string $itemId){
-        $query = [
-            'Recursive' => 'true',
-            'ImageRefreshMode' => 'FullRefresh',
-            'MetadataRefreshMode' => 'FullRefresh',
-            'ReplaceAllImages' => 'false',
-            'RegenerateTrickplay' => 'false',
-            'ReplaceAllMetadata' => 'true'
-        ];
+    public function refreshItemMetadata(string $itemId, array $query = []){
+        if(!empty($query))
+            $query = [
+                'Recursive' => 'true',
+                'ImageRefreshMode' => 'FullRefresh',
+                'MetadataRefreshMode' => 'FullRefresh',
+                'ReplaceAllImages' => 'false',
+                'RegenerateTrickplay' => 'false',
+                'ReplaceAllMetadata' => 'true'
+            ];
         return $this->apiCall('/Items/'.$itemId.'/Refresh?'.http_build_query($query), 'POST');
     }
 
