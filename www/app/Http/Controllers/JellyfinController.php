@@ -274,6 +274,8 @@ class JellyfinController extends Controller
                 foreach ($items as $key => $item) {
                     if (in_array($item['Id'], $order)) {
                         $tmpItems[array_search($item['Id'], $order)] = $item;
+                    }else{
+                        $tmpItems[count($order)+$key] = $item;
                     }
                 }
                 if (!empty($tmpItems))
