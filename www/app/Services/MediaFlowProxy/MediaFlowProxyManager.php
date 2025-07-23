@@ -23,9 +23,11 @@ class MediaFlowProxyManager
     }
 
     public function setHeaders(array $headers){
-        $this->headers = array_filter($headers);
-        if(!isset($this->headers['h_user-agent']))
-            $this->headers['h_user-agent'] = ApiManager::getStaticRandomAgent();
+        if(!empty($headers)) {
+            $this->headers = array_filter($headers);
+            if (!isset($this->headers['h_user-agent']))
+                $this->headers['h_user-agent'] = ApiManager::getStaticRandomAgent();
+        }
     }
 
     public function hasHeaders(){

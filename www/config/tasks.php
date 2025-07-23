@@ -111,7 +111,7 @@ return [
     'cron' => [
         md5('library:clean') => '0 */6 * * *',
         md5('library:update') => '0 */12 * * *',
-        md5('library:rebuild') => '0 */4 * * *',
+        md5('library:rebuild') => '0 */24 * * *',
         //md5('library:playback-info') => '0 */4 * * *'
         md5('library:playback-info') => '',
         md5('delete:images') => '0 0 * * 0'

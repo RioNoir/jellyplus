@@ -238,6 +238,7 @@ class JellyfinItem
                 $this->item['ProviderIds']['JPStreamUrl'] = $sourceQuery['url'];
 
             $sourceQuery['apiKey'] = jp_config('api_key');
+            $sourceQuery = array_filter($sourceQuery);
             $sourceUrl = app_url($source).'?'.http_build_query($sourceQuery);
             file_put_contents($strmFile, $sourceUrl);
 
@@ -260,7 +261,7 @@ class JellyfinItem
 
             if (!isset($item->item_jellyfin_id) && in_array($item->item_type, ['movie', 'tvSeries'])) {
                 $api->refreshItemMetadata($this->itemId);
-                dispatch(new CommandExecutionJob('library:playback-info', ['--itemId' => $this->itemId]));
+                //dispatch(new CommandExecutionJob('library:playback-info', ['--itemId' => $this->itemId]));
             }
 
 //            $overview = "";

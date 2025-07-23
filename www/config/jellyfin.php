@@ -25,6 +25,23 @@ return [
             'type' => 'movies',
         ]
     ],
+    'menu_links' => [
+        [
+            'name' => 'Jellyplus',
+            'icon' => 'settings',
+            'url' => '#/configurationpage?name=JP_CONF',
+        ],
+        [
+            'name' => 'GitHub',
+            'icon' => 'code',
+            'url' => 'https://github.com/RioNoir/jellyplus',
+        ],
+        [
+            'name' => 'Buy Me a Coffee',
+            'icon' => 'coffee',
+            'url' => 'https://buymeacoffee.com/rionoir',
+        ]
+    ],
     'delete_unused_items_after' => 1, //days
     'update_series_after' => 24, //hours
     'delete_streams_after' => 3, //hours

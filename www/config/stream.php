@@ -2,6 +2,8 @@
 
 return [
     'cache_ttl' => 30, //Minutes
+    'stream_url_ttl' => 20, //Minutes
+    'stream_expires_ttl' => 1440, //Minutes
     'resolution' => env('STREAM_QUALITY', '1080p'),
     'format' => env('STREAM_FORMAT', 'bluray'),
     'lang' => env('STREAM_LANG', 'eng'),

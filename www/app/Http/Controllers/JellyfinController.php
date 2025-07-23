@@ -422,11 +422,7 @@ class JellyfinController extends Controller
 //            'icon' => 'search',
 //            'url' => '#/list.html?parentId='.md5('_discover').'&serverId='.jp_config('server_id'),
 //        ];
-        $response['menuLinks'][] = [
-            'name' => 'Jellyplus',
-            'icon' => 'settings',
-            'url' => '#/configurationpage?name=JP_CONF',
-        ];
+        $response['menuLinks'] = config('jellyfin.menu_links');
         return $this->response->setBody($response)->setStatus(200)->getResponse();
     }
 

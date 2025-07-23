@@ -74,7 +74,7 @@ if [ -d /usr/share/jellyfin/web ]; then
     START=${THEME#*"$START"}
     END=${START%"$END"*}
     TOREMOVE="${END##*( )}"
-    if [[ "$TOREMOVE" != "$THEME" ]]; then
+    if [ "$TOREMOVE" != "$THEME" ]; then
         THEME="$(replace_text "$THEME" "$(echo "$TOREMOVE")" "$(echo "$CUSTOM_THEME")")"
     else
       ADD_THEME="\n\n/*JELLYPLUS*/ $(echo "$CUSTOM_THEME") \n\n/*ENDJELLYPLUS*/"
@@ -91,6 +91,9 @@ if [ -d /usr/share/jellyfin/web ]; then
   cp /var/src/jellyfin/config/network.xml $JP_DATA_PATH/jellyfin/config/network.xml
   if [ ! -f $JP_DATA_PATH/jellyfin/config/branding.xml ]; then
     cp /var/src/jellyfin/config/branding.xml $JP_DATA_PATH/jellyfin/config/branding.xml
+  fi
+  if [ ! -f $JP_DATA_PATH/jellyfin/config/system.xml ]; then
+    cp /var/src/jellyfin/config/system.xml $JP_DATA_PATH/jellyfin/config/system.xml
   fi
 fi
 

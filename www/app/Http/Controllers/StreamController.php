@@ -20,6 +20,7 @@ class StreamController extends BaseController
         $now = Carbon::now()->format('YmdH');
         $api = new JellyfinApiManager();
 
+        $clientIp = get_client_ip();
         $apiKey = $request->get('apiKey', null);
         $userId = $request->get('userId', null);
         $imdbId = $request->get('imdbId', null);
@@ -35,9 +36,11 @@ class StreamController extends BaseController
         $streamResolution = $request->get('streamResolution', jp_config('stream.resolution'));
         $streamFormat = $request->get('streamFormat', jp_config('stream.format'));
         $streamLang = $request->get('streamLang', null);
+        $streamHeaders = $request->get('streamHeaders', []);
         $mediaFlowProxy = (bool) $request->get('mfp', true);
         $streamDownload = (bool) $request->get('download', false);
-        $streamHeaders = $request->get('streamHeaders', []);
+        $expires = $request->get('expires', null);
+        $redirected = $request->get('redirected', false);
 
         $streamCacheKey = md5($now.$streamId.json_encode($request->all()).json_encode(jp_config()));
 
@@ -59,15 +62,18 @@ class StreamController extends BaseController
             if(!isset($streamLang))
                 $streamLang = $api->getStreamingLanguageByUser($userId);
 
-            Log::info('[stream]['.get_client_ip().'] Finding best stream with options: ' . $metaId . ', ' . $streamResolution . ', ' . $streamFormat . ', ' . $streamLang);
+            Log::info('[stream]['.$clientIp.'] Finding best stream with options: ' . $metaId . ', ' . $streamResolution . ', ' . $streamFormat . ', ' . $streamLang);
+
+            //Check if expired
+            if(isset($expires) && Carbon::createFromTimestamp($expires)->isPast())
+                $streamId = null;
 
             //Find the best stream by id
             $streams = StreamCollection::findByMetaId($metaId, $metaType);
             if (isset($streamId)){
                 $stream = $streams->sortByStreamId($streamId)->first();
             }else{
-                $stream = $streams->filterByFormats()->sortByOptions($streamResolution, $streamFormat, $streamLang)
-                    ->sortByKeywords()->firstByUrl();
+                $stream = $streams->filterByFormats()->sortByOptions($streamResolution, $streamFormat, $streamLang)->sortByKeywords()->firstByUrl();
             }
 
             //Return stream url
@@ -80,7 +86,8 @@ class StreamController extends BaseController
                         'metaId' => $metaId,
                         'metaType' => $metaType,
                         'userId' => $userId,
-                        'apiKey' => jp_config('api_key')
+                        'apiKey' => jp_config('api_key'),
+                        'expires' => Carbon::now()->addMinutes(jp_config('stream.stream_expires_ttl'))->timestamp,
                     ];
                     file_put_contents($path, app_url('/stream') . '?' . http_build_query($query));
                 }
@@ -94,13 +101,25 @@ class StreamController extends BaseController
                     $streamHeaders = @$streamInfo['behaviorHints']['headers'] ?? [];
 
                 $streamUrl = $stream->getStreamUrl(false);
-                Log::info('[stream]['.get_client_ip().'] Requested stream "' . str_replace("\n", " ", $stream->stream_title) . '" from ' . $streamUrl);
+                Log::info('[stream]['.$clientIp.'] Requested stream "' . str_replace("\n", " ", $stream->stream_title) . '" from ' . $streamUrl);
+
+            }elseif(!$redirected){
+                //No stream found (redirect)
+                $query = [
+                    'itemId' => $itemId,
+                    'metaId' => $metaId,
+                    'metaType' => $metaType,
+                    'apiKey' => jp_config('api_key'),
+                    'redirected' => app_url('/stream') . '?' . http_build_query($request->all())
+                ];
+                Log::info('[stream]['.$clientIp.'] No stream found, redirect for new search..');
+                return redirect(app_url('/stream') . '?' . http_build_query($query), 301);
             }
         }
 
         if(isset($streamUrl)){
-            Cache::put('stream_url_'.$streamCacheKey, $streamUrl, Carbon::now()->addMinutes(10));
-            Cache::put('stream_headers_'.$streamCacheKey, $streamHeaders, Carbon::now()->addMinutes(10));
+            Cache::put('stream_url_'.$streamCacheKey, $streamUrl, Carbon::now()->addMinutes(jp_config('stream.stream_url_ttl')));
+            Cache::put('stream_headers_'.$streamCacheKey, $streamHeaders, Carbon::now()->addMinutes(jp_config('stream.stream_url_ttl')));
 
             //Media Flow Proxy
             if($mediaFlowProxy && jp_config('mediaflowproxy.enabled')){
@@ -110,28 +129,26 @@ class StreamController extends BaseController
                 if(jp_config('mediaflowproxy.enabled_external') && !empty(jp_config('mediaflowproxy.url')))
                     $mfp->useRemoteServer(jp_config('mediaflowproxy.url'), jp_config('mediaflowproxy.api_password'));
 
+                $headers = [];
                 if(isset($streamHeaders['request'])){
-                    $headers = [];
                     $headers['h_referer'] = @$streamHeaders['request']['Referer'];
                     $headers['h_origin'] = @$streamHeaders['request']['Origin'];
                     $headers['h_user-agent'] = @$streamHeaders['request']['User-Agent'];
-                    $mfp->setHeaders($headers);
                 }elseif(!empty($streamHeaders)){
-                    $headers = [];
                     $headers['h_referer'] = @$streamHeaders['Referer'];
                     $headers['h_origin'] = @$streamHeaders['Origin'];
                     $headers['h_user-agent'] = @$streamHeaders['User-Agent'];
-                    $mfp->setHeaders($headers);
                 }
+                $mfp->setHeaders($headers);
 
                 $streamUrl = $mfp->generateUrl();
             }
 
-            Log::info('[stream]['.get_client_ip().'] Playing stream from ' . $streamUrl);
+            Log::info('[stream]['.$clientIp.'] Playing stream from ' . $streamUrl);
 
             if($streamDownload) {
                 $streamFile = pathinfo($streamUrl, PATHINFO_BASENAME);
-                Log::info('[download]['.get_client_ip().'] Downloading stream ('.$streamFile.') from ' . $streamUrl);
+                Log::info('[download]['.$clientIp.'] Downloading stream ('.$streamFile.') from ' . $streamUrl);
                 return redirect($streamUrl, 301)->withHeaders([
                     'User-Agent' => ApiManager::getStaticRandomAgent(),
                     'Content-Disposition' => 'attachment; filename="' . $streamFile . '"'
@@ -149,6 +166,7 @@ class StreamController extends BaseController
             return redirect($streamUrl, 301)->withHeaders(['User-Agent' => ApiManager::getStaticRandomAgent()]);
         }
 
+        Log::info('[stream]['.$clientIp.'] No streams found (404).');
         return response(null, 404);
     }
 }

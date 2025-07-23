@@ -223,7 +223,10 @@ class JellyfinManager
                 }
             }
 
+            $sourceQuery['streamId'] = null;
+            $sourceQuery['expires'] = null;
             $sourceQuery['apiKey'] = jp_config('api_key');
+            $sourceQuery = array_filter($sourceQuery);
             file_put_contents($filePath, app_url($source).'?'.http_build_query($sourceQuery));
 
             return $filePath;
