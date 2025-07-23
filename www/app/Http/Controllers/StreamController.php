@@ -73,7 +73,7 @@ class StreamController extends BaseController
             if (isset($streamId)){
                 $stream = $streams->sortByStreamId($streamId)->first();
             }else{
-                $stream = $streams->filterByFormats()->sortByOptions($streamResolution, $streamFormat, $streamLang)->sortByKeywords()->firstByUrl();
+                $stream = $streams->filterByFormats()->sortByOptions($streamResolution, $streamFormat, $streamLang)->sortByKeywords()->first();
             }
 
             //Return stream url
