@@ -464,7 +464,13 @@ class JellyfinController extends Controller
     }
 
     public function postSystemConfigurationNetwork(Request $request) {
-        return response(null, 409);
+        $data = $request->all();
+        $data['BaseUrl'] = "";
+        $data['InternalHttpPort'] = 8096;
+        $data['InternalHttpsPort'] = 8920;
+        $data['PublicHttpPort'] = 8096;
+        $data['PublicHttpsPort'] = 8920;
+        return $this->response->setContent($data)->make()->getResponse();
     }
 
     public function getSystemLogs(Request $request) {
