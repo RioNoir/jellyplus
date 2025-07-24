@@ -25,6 +25,25 @@ fatal() {
     exit 1
 }
 
+get_string_between () {
+    if [ -n "$1" ]; then
+      FIND=$(echo ${1//$'\n'/})
+      START=${2##*( )}
+      END=${3##*( )}
+      START=${FIND#*"$START"}
+      END=${START%"$END"*}
+      echo ${END##*( )}
+    fi
+}
+replace_text(){
+  STRING="${1/${2}/${3}}"
+  echo "$STRING"
+}
+get_ip_address(){
+  IP_ADDRESS=$(ifconfig | grep 'inet ' | awk '{print $2}' | grep -v '127.0.0.1')
+  echo $IP_ADDRESS
+}
+
 echo ""
 echo "***********************************************************"
 echo " Starting Jellyplus Docker Container                   "
