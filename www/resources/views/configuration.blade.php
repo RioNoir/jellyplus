@@ -94,7 +94,7 @@
                         <div class="selectContainer" style="margin-bottom: 2px">
                             <select is="emby-select" name="stream.resolution" label="Default Resolution">
                                 @foreach(jp_config('stream.resolutions') as $option)
-                                    <option value="{{$option}}" @if($option == jp_config('stream.resolution')) selected @endif>{{$option}}</option>
+                                    <option value="{{$option}}" @if($option == jp_config('stream.resolution')) selected @endif>{{strtoupper(str_replace('_', ' / ', $option))}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -104,11 +104,41 @@
                         <div class="selectContainer" style="margin-bottom: 2px">
                             <select is="emby-select" name="stream.format" label="Default Format">
                                 @foreach(jp_config('stream.formats') as $option)
-                                    <option value="{{$option}}" @if($option == jp_config('stream.format')) selected @endif>{{$option}}</option>
+                                    <option value="{{$option}}" @if($option == jp_config('stream.format')) selected @endif>{{strtoupper(str_replace('_', ' / ', $option))}}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="fieldDescription">Stream format by default, is used in the Auto stream function and in third-party clients where streams cannot be selected. If it is not available it takes the first available option after it.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <div class="selectContainer" style="margin-bottom: 2px">
+                            <select is="emby-select" name="stream.compression" label="Default Compression">
+                                @foreach(jp_config('stream.compressions') as $option)
+                                    <option value="{{$option}}" @if($option == jp_config('stream.compression')) selected @endif>{{strtoupper(str_replace('_', ' / ', $option))}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="fieldDescription">Stream compression by default, is used in the Auto stream function and in third-party clients where streams cannot be selected. If it is not available it takes the first available option after it.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <div class="selectContainer" style="margin-bottom: 2px">
+                            <select is="emby-select" name="stream.quality" label="Default Quality">
+                                @foreach(jp_config('stream.qualities') as $option)
+                                    <option value="{{$option}}" @if($option == jp_config('stream.quality')) selected @endif>{{strtoupper(str_replace('_', ' / ', $option))}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="fieldDescription">Stream quality by default, is used in the Auto stream function and in third-party clients where streams cannot be selected. If it is not available it takes the first available option after it.</div>
+                    </div>
+                    <div class="inputContainer">
+                        <div class="selectContainer" style="margin-bottom: 2px">
+                            <select is="emby-select" name="stream.audio_format" label="Default Audio Format">
+                                @foreach(jp_config('stream.audio_formats') as $option)
+                                    <option value="{{$option}}" @if($option == jp_config('stream.audio_format')) selected @endif>{{strtoupper(str_replace('_', ' / ', $option))}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="fieldDescription">Stream audio format by default, is used in the Auto stream function and in third-party clients where streams cannot be selected. If it is not available it takes the first available option after it.</div>
                     </div>
                     <div class="inputContainer">
 {{--                        <input is="emby-input" type="text" name="stream.lang" required label="Default Language"--}}

@@ -4,30 +4,16 @@ namespace App\Services\Streams;
 
 class StreamsHelper
 {
-    public static function getOrderedResolutions(string $streamResolution = null) : array {
-        $streamResolutions = jp_config('stream.resolutions');
-        if(isset($streamResolution)) {
-            $targetIndex = array_search($streamResolution, $streamResolutions);
+    public static function getOrderedList(array $list, string $target = null) : array {
+        if(isset($target)) {
+            $targetIndex = array_search($target, $list);
             if ($targetIndex !== false) {
-                $before = array_slice($streamResolutions, 0, $targetIndex);
-                $after = array_slice($streamResolutions, $targetIndex);
-                $streamResolutions = array_merge($after, $before);
+                $before = array_slice($list, 0, $targetIndex);
+                $after = array_slice($list, $targetIndex);
+                $list = array_merge($after, $before);
             }
         }
-        return $streamResolutions;
-    }
-
-    public static function getOrderedFormats(string $streamFormat = null){
-        $streamFormats = jp_config('stream.formats');
-        if(isset($streamFormat)) {
-            $targetIndex = array_search($streamFormat, $streamFormats);
-            if ($targetIndex !== false) {
-                $before = array_slice($streamFormats, 0, $targetIndex);
-                $after = array_slice($streamFormats, $targetIndex);
-                $streamFormats = array_merge($after, $before);
-            }
-        }
-        return $streamFormats;
+        return $list;
     }
 
     public static function getOrderedLanguages(string $streamLang) : array {

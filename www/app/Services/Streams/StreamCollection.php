@@ -23,15 +23,28 @@ class StreamCollection extends Collection
         });
     }
 
-    public function sortByOptions(string $resolution = null, string $format = null, string $language = null){
+    public function sortByOptions(string $resolution = null, string $format = null, string $compression = null,
+                                  string $quality = null, string $audio = null,  string $language = null){
         if(empty($resolution))
             $resolution = jp_config('stream.resolution');
         if(empty($format))
             $format = jp_config('stream.format');
+        if(empty($compression))
+            $compression = jp_config('stream.compression');
+        if(empty($quality))
+            $quality = jp_config('stream.quality');
+        if(empty($audio))
+            $audio = jp_config('stream.audio_format');
         if(empty($language))
             $language = jp_config('stream.lang');
 
-        return $this->sortByResolution($resolution)->sortByLanguage($language);
+        return $this->sortByOption(jp_config('stream.audio_formats'), $audio, false)
+            ->sortByOption(jp_config('stream.formats'), $format, false)
+            ->sortByOption(jp_config('stream.compressions'), $compression)
+            ->sortByOption(jp_config('stream.qualities'), $quality, false)
+            ->sortByOption(jp_config('stream.resolutions'), $resolution)
+            ->sortByLanguage($language)
+            ;
     }
 
     public function sortByKeywords($keywords = null){
@@ -64,29 +77,28 @@ class StreamCollection extends Collection
         });
     }
 
-    public function sortByResolution(string $resolution = '1080p'){
-        $resolutions = StreamsHelper::getOrderedResolutions($resolution);
-        return $this->sortBy(function ($stream) use ($resolutions) {
+    public function sortByOption(array $list, string $target, bool $returnEffective = true){
+        $list = StreamsHelper::getOrderedList($list, $target);
+        return $this->sortBy(function ($stream) use ($list, $target, $returnEffective) {
             $title = strtolower(str_replace("\n"," ", trim($stream['stream_title'])));
-            foreach ($resolutions as $index => $resolution) {
-                if (stripos($title, $resolution) !== false) {
-                    return $index;
+            foreach ($list as $index => $search) {
+                if(str_contains($search, '_')){
+                    $searches = explode('_', $search);
+                    foreach ($searches as $index2 => $searchKey) {
+                        if (stripos($title, $searchKey) !== false) {
+                            return $index;
+                        }
+                    }
                 }
+                if (stripos($title, $search) !== false)
+                    return $index;
             }
-            return count($resolutions);
-        });
-    }
 
-    public function sortByFormat(string $format = 'bluray'){
-        $formats = StreamsHelper::getOrderedFormats($format);
-        return $this->sortBy(function ($stream) use ($formats) {
-            $title = strtolower(str_replace("\n"," ", trim($stream['stream_title'])));
-            foreach ($formats as $index => $format) {
-                if (stripos($title, $format) !== false) {
-                    return $index;
-                }
+            if(!$returnEffective){
+                return -(count($list) - (int) array_search($target, $list));
+            }else{
+                return count($list);
             }
-            return count($formats);
         });
     }
 

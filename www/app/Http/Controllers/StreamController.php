@@ -35,6 +35,9 @@ class StreamController extends BaseController
         $streamId = $request->get('streamId', null);
         $streamResolution = $request->get('streamResolution', jp_config('stream.resolution'));
         $streamFormat = $request->get('streamFormat', jp_config('stream.format'));
+        $streamCompression = $request->get('streamCompression', jp_config('stream.compression'));
+        $streamQuality = $request->get('streamQuality', jp_config('stream.quality'));
+        $streamAudio = $request->get('streamAudio', jp_config('stream.audio_format'));
         $streamLang = $request->get('streamLang', null);
         $streamHeaders = $request->get('streamHeaders', []);
         $mediaFlowProxy = (bool) $request->get('mfp', true);
@@ -73,7 +76,9 @@ class StreamController extends BaseController
             if (isset($streamId)){
                 $stream = $streams->sortByStreamId($streamId)->first();
             }else{
-                $stream = $streams->filterByFormats()->sortByOptions($streamResolution, $streamFormat, $streamLang)->sortByKeywords()->first();
+                $stream = $streams->filterByFormats()
+                    ->sortByOptions($streamResolution, $streamFormat, $streamCompression, $streamQuality, $streamAudio, $streamLang)
+                    ->sortByKeywords()->first();
             }
 
             //Return stream url
