@@ -25,25 +25,6 @@ fatal() {
     exit 1
 }
 
-get_string_between () {
-    if [ -n "$1" ]; then
-      FIND=$(echo ${1//$'\n'/})
-      START=${2##*( )}
-      END=${3##*( )}
-      START=${FIND#*"$START"}
-      END=${START%"$END"*}
-      echo ${END##*( )}
-    fi
-}
-replace_text(){
-  STRING="${1/${2}/${3}}"
-  echo "$STRING"
-}
-get_ip_address(){
-  IP_ADDRESS=$(ifconfig | grep 'inet ' | awk '{print $2}' | grep -v '127.0.0.1')
-  echo $IP_ADDRESS
-}
-
 echo ""
 echo "***********************************************************"
 echo " Starting Jellyplus Docker Container                   "
@@ -81,32 +62,23 @@ php artisan queue:clear 2>&1 > /dev/null
 #Jellyfin customizations
 info "-- Performing customizations to Jellyfin"
 if [ -d /usr/share/jellyfin/web ]; then
+  #Logos customizations
   cp -r /var/src/img/* /usr/share/jellyfin/web/assets/img
   cp -r /var/src/img/web-icons/* /usr/share/jellyfin/web/
 
   #Theme customizations
   CUSTOM_THEME="\n\n $(cat /var/src/themes/theme.css)"
-  THEME="$(cat /usr/share/jellyfin/web/themes/dark/theme.css)"
-  if [ -n "$THEME" ]; then
-    START="/*JELLYPLUS*/"
-    END="/*ENDJELLYPLUS*/"
-    START=${THEME#*"$START"}
-    END=${START%"$END"*}
-    TOREMOVE="${END##*( )}"
-    if [ "$TOREMOVE" != "$THEME" ]; then
-        THEME="$(replace_text "$THEME" "$(echo "$TOREMOVE")" "$(echo "$CUSTOM_THEME")")"
-    else
-      ADD_THEME="\n\n/*JELLYPLUS*/ $(echo "$CUSTOM_THEME") \n\n/*ENDJELLYPLUS*/"
-      THEME="$THEME $(echo "$ADD_THEME")"
-    fi
+  if [ ! -f $JP_DATA_PATH/jellyfin/web/themes/custom.css ]; then
+      echo "$CUSTOM_THEME" > /usr/share/jellyfin/web/themes/custom.css
+      echo "$CUSTOM_THEME" >> /usr/share/jellyfin/web/themes/dark/theme.css
+      echo "$CUSTOM_THEME" >> /usr/share/jellyfin/web/themes/light/theme.css
+      echo "$CUSTOM_THEME" >> /usr/share/jellyfin/web/themes/appletv/theme.css
+      echo "$CUSTOM_THEME" >> /usr/share/jellyfin/web/themes/blueradiance/theme.css
+      echo "$CUSTOM_THEME" >> /usr/share/jellyfin/web/themes/purplehaze/theme.css
+      echo "$CUSTOM_THEME" >> /usr/share/jellyfin/web/themes/wmc/theme.css
   fi
-  echo "$THEME" > /usr/share/jellyfin/web/themes/dark/theme.css
-  echo "$THEME" > /usr/share/jellyfin/web/themes/light/theme.css
-  echo "$THEME" > /usr/share/jellyfin/web/themes/appletv/theme.css
-  echo "$THEME" > /usr/share/jellyfin/web/themes/blueradiance/theme.css
-  echo "$THEME" > /usr/share/jellyfin/web/themes/purplehaze/theme.css
-  echo "$THEME" > /usr/share/jellyfin/web/themes/wmc/theme.css
 
+  #Settings customizations
   cp /var/src/jellyfin/config/network.xml $JP_DATA_PATH/jellyfin/config/network.xml
   if [ ! -f $JP_DATA_PATH/jellyfin/config/branding.xml ]; then
     cp /var/src/jellyfin/config/branding.xml $JP_DATA_PATH/jellyfin/config/branding.xml
