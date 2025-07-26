@@ -90,37 +90,39 @@ class JellyfinController extends Controller
     }
 
     public function getItemsImages(string $itemId, string $imageId, Request $request) {
-        $lang = app()->getLocale();
-        $key = 'item_image_'.md5($lang.$itemId.$imageId.json_encode($request->query()));
-        if($itemId == md5('_discover'))
-            $key = 'item_image_'.md5($lang.$itemId.$imageId);
-
-        $image = Cache::remember($key, Carbon::now()->addDay(), function () use ($itemId, $request) {
-            $image = jellyfin_url($request->path(), $request->query());
-
-//            if(is_base64($itemId)) {
-//                $height = $request->get('fillHeight', 300);
-//                $width = $request->get('fillWidth', 200);
-//                $image = ImageHelper::getImageById($itemId, $height, $width);
-//            }
-
+        $response = $this->response->make()->getResponse();
+        if($response->status() !== 200){
+            $lang = app()->getLocale();
+            $key = 'item_image_'.md5($lang.$itemId.$imageId.json_encode($request->query()));
             if($itemId == md5('_discover'))
-                $image = ImageHelper::getImageByName(t("Discover"), 225, 400);
+                $key = 'item_image_'.md5($lang.$itemId.$imageId);
 
-            if($itemId == md5('_livetv'))
-                $image = ImageHelper::getImageByName(t("Live TV"), 225, 400);
+            $image = Cache::remember($key, Carbon::now()->addDay(), function () use ($itemId, $request) {
+                $image = null;
+                if ($itemId == md5('_discover'))
+                    $image = ImageHelper::getImageByName(t("Discover"), 225, 400);
 
-            $item = Items::where('item_md5', $itemId)->first();
-            if(isset($item->item_image_url))
-                $image = $item->item_image_url;
+                if ($itemId == md5('_livetv'))
+                    $image = ImageHelper::getImageByName(t("Live TV"), 225, 400);
 
-            return isset($image) ? @file_get_contents($image) : null;
-        });
+                $item = Items::where('item_md5', $itemId)->first();
+                if (isset($item->item_image_url))
+                    $image = $item->item_image_url;
 
-        if(isset($image))
-            return response($image, 200)->header('Content-Type', 'image/jpeg');
+                return @file_get_contents($image);
+            });
 
-        return response('', 404);
+            if(!empty($image)){
+                try {
+                    $file_info = new \finfo(FILEINFO_MIME_TYPE);
+                    $mime_type = $file_info->buffer($image);
+                } catch (\Exception $e) {
+                    $mime_type = "image/jpeg";
+                }
+                $response = response($image, 200)->header('Content-Type', $mime_type);
+            }
+        }
+        return $response;
     }
 
     public function getItemsPlaybackInfo(string $itemId, Request $request) {
