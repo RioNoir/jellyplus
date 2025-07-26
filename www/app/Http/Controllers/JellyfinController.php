@@ -95,14 +95,8 @@ class JellyfinController extends Controller
         if($itemId == md5('_discover'))
             $key = 'item_image_'.md5($lang.$itemId.$imageId);
 
-        $image = Cache::remember($key, Carbon::now()->addDay(), function () use ($itemId, $request) {
+        $image = Cache::remember($key, Carbon::now()->addHour(), function () use ($itemId, $request) {
             $image = jellyfin_url($request->path(), $request->query());
-
-//            if(is_base64($itemId)) {
-//                $height = $request->get('fillHeight', 300);
-//                $width = $request->get('fillWidth', 200);
-//                $image = ImageHelper::getImageById($itemId, $height, $width);
-//            }
 
             if($itemId == md5('_discover'))
                 $image = ImageHelper::getImageByName(t("Discover"), 225, 400);
@@ -117,8 +111,15 @@ class JellyfinController extends Controller
             return isset($image) ? @file_get_contents($image) : null;
         });
 
-        if(isset($image))
-            return response($image, 200)->header('Content-Type', 'image/jpeg');
+        if(!empty($image)){
+            try {
+                $file_info = new \finfo(FILEINFO_MIME_TYPE);
+                $mime_type = $file_info->buffer($image);
+            } catch (\Exception $e) {
+                $mime_type = "image/jpeg";
+            }
+            return response($image, 200)->header('Content-Type', $mime_type);
+        }
 
         return response('', 404);
     }
