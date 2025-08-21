@@ -24,7 +24,7 @@
         "laravel/lumen-framework": "^9.0",
         "php-webdriver/webdriver": "^1.1",
         "symfony/css-selector": "^7.2",
-        "symfony/dom-crawler": "^7.2",
+        "symfony/dom-crawler": "^7.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
