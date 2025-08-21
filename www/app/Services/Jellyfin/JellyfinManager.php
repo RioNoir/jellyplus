@@ -4,6 +4,7 @@ namespace App\Services\Jellyfin;
 
 use App\Services\Addons\CatalogsManager;
 use App\Services\Items\ItemsSearchManager;
+use Illuminate\Support\Facades\Log;
 use LaLit\Array2XML;
 
 class JellyfinManager
@@ -128,11 +129,16 @@ class JellyfinManager
     protected static function createNfoFile(string $directory, array $titleData): ?string {
         $typeMap = ['movie' => 'movie', 'tvSeries' => 'tvshow', 'liveTv' => 'movie', 'tvSeason' => 'season', 'tvEpisode' => 'episodedetails'];
         if(in_array($titleData['type'], array_keys($typeMap))){
+            $type = $typeMap[$titleData['type']];
+            $filePath = $directory . "/" . $type . ".nfo";
             try {
-                $type = $typeMap[$titleData['type']];
-                $filePath = $directory . "/" . $type . ".nfo";
 
-                $titleData['sorttitle'] = strtolower(clean_title($titleData['title']));
+                $titleData['plot'] = xml_sanitize_string($titleData['plot'] ?? "");
+                $titleData['outline'] = xml_sanitize_string($titleData['outline'] ?? "");
+                $titleData['title'] = xml_sanitize_string($titleData['title'] ?? "");
+                $titleData['originaltitle'] = xml_sanitize_string($titleData['originaltitle'] ?? "");
+                $titleData['sorttitle'] = strtolower(xml_sanitize_string($titleData['title']));
+
                 if($type == "episodedetails") {
                     $season = sprintf("%02d", $titleData['season']);
                     $fileName = "Episode S".$season."E".sprintf("%02d", $titleData['episode']);
@@ -173,7 +179,9 @@ class JellyfinManager
                 file_put_contents($filePath, $xml->saveXML());
 
                 return $filePath;
-            }catch (\Exception $e){}
+            }catch (\Exception $e){
+                Log::error($e->getMessage());
+            }
         }
         return null;
     }

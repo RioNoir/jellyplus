@@ -460,11 +460,18 @@ if (!function_exists('download_file_from_url')) {
     }
 }
 
-if (!function_exists('clean_title')) {
-    function clean_title(string $string){
+if (!function_exists('clean_string')) {
+    function clean_string(string $string){
         $string = str_replace(' ', '-', $string); // Replaces all spaces with hyphens.
-        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+        $string = preg_replace('/[^A-Za-z0-9\-\'.:,;\n\s]/', '', $string); // Removes special chars.
         return str_replace('-', ' ', preg_replace('/-+/', '-', $string)); // Replaces multiple hyphens with single one.
+    }
+}
+
+if (!function_exists('xml_sanitize_string')) {
+    function xml_sanitize_string(string $value): string{
+        $value = preg_replace('/[^\p{L}\p{N}\p{P}\p{S}\p{Z}\x{0009}\x{000A}\x{000D}]/u', '', $value);
+        return htmlspecialchars($value, ENT_XML1, 'UTF-8');
     }
 }
 

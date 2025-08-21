@@ -14,6 +14,7 @@
         "ext-libxml": "*",
         "ext-simplexml": "*",
         "ext-zlib": "*",
+        "ext-iconv": "*",
         "codebuglab/laravel-tmdb": "^0.0.5@beta",
         "digitickets/lalit": "^3.4",
         "guzzle/http": "^3.9",
@@ -23,7 +24,7 @@
         "laravel/lumen-framework": "^9.0",
         "php-webdriver/webdriver": "^1.1",
         "symfony/css-selector": "^7.2",
-        "symfony/dom-crawler": "^7.2"
+        "symfony/dom-crawler": "^7.2",
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

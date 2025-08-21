@@ -42,7 +42,7 @@ class UpdateLibraryCommand extends Command
             $api = new JellyfinApiManager();
 
             //Faccio l'aggiornamento delle serie tv per vedere se ci sono nuovi episodi
-            $items = Items::query()->where('item_type', 'tvSeries')->whereNotNull('item_jellyfin_id')->whereNotNull('item_path')
+            $items = Items::query()->whereIn('item_type', ['liveTv', 'tvSeries'])->whereNotNull('item_jellyfin_id')->whereNotNull('item_path')
                 ->where('updated_at', '<=', Carbon::now()->subHours(jp_config('jellyfin.update_series_after')))->get();
             $count = $items->count();
             foreach ($items as $item) {
@@ -64,8 +64,8 @@ class UpdateLibraryCommand extends Command
                 $item->updated_at = Carbon::now();
                 $item->save();
             }
-            Log::info('[' . $this->getName() . '] ' . $count . ' tv series updated.');
-            $this->info('[' . $this->getName() . '] ' . $count . ' tv series updated.');
+            Log::info('[' . $this->getName() . '] ' . $count . ' items updated.');
+            $this->info('[' . $this->getName() . '] ' . $count . ' items updated.');
 
             //Controllo se funziona ancora l'api key
             if ($api->testApiKey()) {

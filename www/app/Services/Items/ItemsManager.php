@@ -9,6 +9,7 @@ use App\Services\Jellyfin\JellyfinApiManager;
 use App\Services\Jellyfin\JellyfinManager;
 use App\Services\TMDB\TMDBApiManager;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class ItemsManager
